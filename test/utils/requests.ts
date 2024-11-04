@@ -147,7 +147,8 @@ export async function subscribeTo(
       authorId,
     },
   });
-  return { res, body: {} };
+  const body = (await res.json()) as UserBody;
+  return { res, body };
 }
 
 export async function subscribedToUser(app: FastifyInstance, userId: string) {

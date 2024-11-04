@@ -74,7 +74,7 @@ await test('gql-mutations', async (t) => {
     });
 
     t.ok(errors.length === 1);
-    const message = errors[0].message;
+    const message = errors[0].message as string;
     t.ok(message.includes(`Int cannot represent non-integer value: 123.321`));
   });
 
@@ -172,6 +172,10 @@ await test('gql-mutations', async (t) => {
     });
 
     t.ok(errors.length === 1);
+    const message = errors[0].message as string;
+    t.ok(
+      message.includes(`Field \"userId\" is not defined by type \"ChangeProfileInput\"`),
+    );
   });
 
   await t.test('Subs mutations.', async (t) => {
@@ -186,7 +190,9 @@ await test('gql-mutations', async (t) => {
       body: { errors },
     } = await gqlQuery(app, {
       query: `mutation ($userId1: UUID!, $authorId1: UUID!, $userId2: UUID!, $authorId2: UUID!) {
-        subscribeTo(userId: $userId1, authorId: $authorId1)
+        subscribeTo(userId: $userId1, authorId: $authorId1) {
+            id
+        }
         unsubscribeFrom(userId: $userId2, authorId: $authorId2)
     }`,
       variables: {
